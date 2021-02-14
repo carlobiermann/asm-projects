@@ -10,20 +10,34 @@ start:
           mov       rdx, output             ; rdx holds address of next byte to write
           mov       r8, 1                   ; initial line length
           mov       r9, 0       	    ; number of stars written on line so far
-	  mov	    r10, maxlines
+	  mov	    r10, midlines
+	  mov       r11, maxlines
 line:
+          cmp       r8, r10
+          jg        line_decr
+
+line_incr:
           mov       byte [rdx], '*'         ; write single star
           inc       rdx                     ; advance pointer to next cell to write
           inc       r9                      ; "count" number so far on line
-          cmp       r9, r10                   ; did we reach the number of stars for this line?
-          jne       line                    ; not yet, keep writing on this line
+          cmp       r9, r8                   ; did we reach the number of stars for this line?
+          jne       line_incr                   ; not yet, keep writing on this line
+          cmp       r8, maxlines
+	  jl        lineDone
+
+line_decr:
+          mov       byte [rdx], '@'
+          inc       rdx
+          inc       r9
+          cmp       r9, r11
+          jne       line_decr
 
 lineDone:
           mov       byte [rdx], 10          ; write a new line char
           inc       rdx                     ; and move pointer to where next char goes
           inc       r8                      ; next line will be one char longer
           mov       r9, 0                   ; reset count of stars written on this line
-          dec       r10
+          dec       r11
           cmp       r8, maxlines                 ; wait, did we already finish the last line?
           jng       line                    ; if not, begin writing this line
 done:
@@ -37,6 +51,7 @@ done:
           syscall                           ; invoke operating system to exit
 
           section   .bss
-maxlines   equ	    13
-dataSize  equ       104
+maxlines   equ	    27
+midlines   equ      13
+dataSize  equ       223
 output:   resb      dataSize
