@@ -16,7 +16,7 @@
 
 data_items: 			
 
-.long 3, 67, 34, 222, 45, 75, 54, 34, 44, 33, 22, 11, 66, 0
+.long 3, 67, 34, 224, 45, 75, 54, 34, 44, 33, 230, 11, 66, 0
 
 .section		.text
 .globl			_start
@@ -25,9 +25,10 @@ _start:
 	movl		$0, %edi
 	movl		data_items(,%edi,4), %eax
 	movl		%eax, %ebx
+	movl		$13, %ecx
 
 start_loop:
-	cmpl		$0, %eax
+	cmpl		data_items(,%ecx,4), %eax
 	je 		loop_exit
 	incl		%edi
 	movl		data_items(,%edi,4), %eax
