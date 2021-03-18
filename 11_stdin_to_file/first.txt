@@ -1,0 +1,4 @@
+This is my first text file 
+I'm currently typing this on the command line 
+Let's hope that this is going into the file that's being 
+created by the program
